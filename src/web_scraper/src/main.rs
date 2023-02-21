@@ -3,7 +3,7 @@ mod trans_struct;
 
 use helpers::{
     build_data_filepath, compile_links, compile_string, compile_trans_links, create_file,
-    get_webpage, write_to_file, TransLinksCompilationErrs, read_latest_date
+    get_webpage, write_to_file, TransLinksCompilationErrs
 };
 
 use trans_struct::TransStruct;
@@ -29,9 +29,7 @@ fn main() {
                 TransLinksCompilationErrs::MissingTranslationBlock(title) => {
                     println!("Missing translation block for {}", title)
                 }
-                TransLinksCompilationErrs::MissingDate(title) => {
-                    println!("No date present on {}", title)
-                }
+                TransLinksCompilationErrs::MissingDate(_) => {}
                 TransLinksCompilationErrs::MissingTranslationList(title) => {
                     println!("No translations available for {}", title)
                 }

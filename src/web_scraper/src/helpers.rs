@@ -116,10 +116,10 @@ pub fn compile_trans_links(page: &str) -> Result<TransStruct, TransLinksCompilat
     let last_date = read_latest_date();
     let title = document.select(&TITLE).next().unwrap().first_child().unwrap().value().as_text().unwrap().to_string();
     if trans_count != 0 {
-               
+        
         let date = document.select(&DATE).next().unwrap().first_child().unwrap().value().as_text().unwrap().to_string();
         let mut trans_struct = TransStruct::new(date);
-        if last_date > trans_struct.get_date() {
+        if last_date >= trans_struct.get_date() {
             return Err(TransLinksCompilationErrs::DateAfterMostRecent(title));
         }
 
