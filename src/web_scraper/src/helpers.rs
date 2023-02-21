@@ -106,19 +106,22 @@ pub enum TransLinksCompilationErrs {
     LongerThan11(String),
     MissingTranslationBlock(String),
     MissingDate(String),
-    MissingTranslationList(String)
+    MissingTranslationList(String),
+    DateAfterMostRecent(String)
 }
 
 pub fn compile_trans_links(page: &str) -> Result<TransStruct, TransLinksCompilationErrs> {
     let document = Html::parse_document(page);    
     let trans_count = document.select(&TRANS_BLOCK).count(); //kill me
-    
+    let last_date = read_latest_date();
     let title = document.select(&TITLE).next().unwrap().first_child().unwrap().value().as_text().unwrap().to_string();
     if trans_count != 0 {
                
         let date = document.select(&DATE).next().unwrap().first_child().unwrap().value().as_text().unwrap().to_string();
-        
-        let mut trans_struct = TransStruct::new( date);
+        let mut trans_struct = TransStruct::new(date);
+        if last_date > trans_struct.get_date() {
+            return Err(TransLinksCompilationErrs::DateAfterMostRecent(title));
+        }
 
         let trans_block = document.select(&TRANS_BLOCK).next().unwrap();
         let block_children = trans_block.children();
@@ -130,12 +133,15 @@ pub fn compile_trans_links(page: &str) -> Result<TransStruct, TransLinksCompilat
             let post_link = format!("{}{}", BASE_PATH, pre_link);
             trans_struct.insert(lang_tag_trim, post_link);
         }
+        println!("Found translation links for {}", title);
         Ok(trans_struct)
     } else if trans_count == 0 {
         if let Some(date) = document.select(&DATE).next() {
             let date_str = date.first_child().unwrap().value().as_text().unwrap().to_string();
-            
             let mut trans_struct = TransStruct::new(date_str);
+            if last_date > trans_struct.get_date() {
+                return Err(TransLinksCompilationErrs::DateAfterMostRecent(title));
+            }
             let fragment = document.select(&TEXT_DIV).next().unwrap();
             if let Some(trans_list) = fragment.select(&LIST).next() {
                 let links = trans_list.children();
@@ -147,6 +153,7 @@ pub fn compile_trans_links(page: &str) -> Result<TransStruct, TransLinksCompilat
                         let post_link = format!("{}{}", BASE_PATH, pre_link);
                         trans_struct.insert(lang_tag, post_link);
                     }
+                    println!("Found translation links for {}", title);
                     Ok(trans_struct)
                 } else {
                     Err(TransLinksCompilationErrs::LongerThan11(title))
@@ -181,10 +188,10 @@ pub fn build_data_filepath(date: String) -> String {
     
     let script_path = env::current_exe().unwrap();
     let parent_path = script_path.parent().unwrap().parent().unwrap().parent().unwrap();
-    let reletive_path = format!("data/raw/SONA_{}", date);
+    let relative_path = format!("data/raw/SONA_{}", date);
     let mut path = PathBuf::new();
     path.push(parent_path);
-    path.push(reletive_path);
+    path.push(relative_path);
 
     path.to_str().unwrap().into()
 }
@@ -207,4 +214,27 @@ pub fn write_to_file(text: String, file_path: String, file_name: String) {
         },
         Err(error) => println!("Error creating file: {}", error),
     }
+}
+
+pub fn read_latest_date() -> String {
+
+    let script_path = env::current_exe().unwrap();
+    let parent_path = script_path.parent().unwrap().parent().unwrap().parent().unwrap();
+    let relative_path = "data/raw/";
+    let mut path = PathBuf::new();
+
+    path.push(parent_path);
+    path.push(relative_path);
+    
+    let entries = fs::read_dir(path).unwrap();
+
+    let mut file_names: Vec<String> = entries
+        .map(|entry| entry.unwrap().file_name().into_string().unwrap())
+        .collect();
+
+    file_names.sort_by(|a, b| b.cmp(a));
+
+    let name = file_names.first().unwrap();
+    let date = &name[5..];
+    date.into()
 }

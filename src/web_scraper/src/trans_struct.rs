@@ -7,8 +7,6 @@ pub struct TransStruct {
     trans_links: HashMap<String, String>
 }
 
-
-
 lazy_static! {
     static ref MONTH_MAP: HashMap<&'static str, &'static str> = {
         let mut map = HashMap::new();

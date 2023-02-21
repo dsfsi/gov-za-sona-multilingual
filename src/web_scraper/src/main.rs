@@ -3,12 +3,15 @@ mod trans_struct;
 
 use helpers::{
     build_data_filepath, compile_links, compile_string, compile_trans_links, create_file,
-    get_webpage, write_to_file, TransLinksCompilationErrs,
+    get_webpage, write_to_file, TransLinksCompilationErrs, read_latest_date
 };
 
 use trans_struct::TransStruct;
 
+
+
 fn main() {
+
     let base_page = get_webpage("https://www.gov.za/state-nation-address").unwrap();
     let base_links = compile_links(&base_page);
 
@@ -32,6 +35,7 @@ fn main() {
                 TransLinksCompilationErrs::MissingTranslationList(title) => {
                     println!("No translations available for {}", title)
                 }
+                TransLinksCompilationErrs::DateAfterMostRecent(_) => {}
             }
         }
     }
