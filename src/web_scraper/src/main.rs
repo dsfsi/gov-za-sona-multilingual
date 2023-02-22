@@ -8,13 +8,10 @@ use helpers::{
 
 use trans_struct::TransStruct;
 
-
-
 fn main() {
 
     let base_page = get_webpage("https://www.gov.za/state-nation-address").unwrap();
     let base_links = compile_links(&base_page);
-
     let mut trans_vec: Vec<TransStruct> = Vec::new();
     for link in base_links {
         let sona_page = get_webpage(link.as_str()).unwrap();
@@ -49,5 +46,6 @@ fn main() {
                 write_to_file(text, file_path.clone(), lang.to_owned());
             }
         }
+        println!("Wrote scraped SONA/{} to {}", trans.get_date(), file_path.clone())
     }
 }

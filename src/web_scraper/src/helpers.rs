@@ -9,6 +9,20 @@ use lazy_static::lazy_static;
 
 use crate::trans_struct::TransStruct;
 
+// lang_mappings = {
+//     'afr' : '',
+//     'eng' : '',
+//     'nbl' : '',
+//     'nso' : 'sot_Latn',
+//     'sep' : 'nso_Latn',
+//     'ssw' : 'ssw_Latn',
+//     'tsn' : 'tsn_Latn',
+//     'tso' : 'tso_Latn',
+//     'ven' : '',
+//     'xho' : 'xho_Latn',
+//     'zul' : 'zul_Latn',
+// } 
+
 lazy_static! {
     static ref MAIN_DIV: Selector = Selector::parse(".field-items").unwrap();
     static ref TEXT_DIV: Selector = Selector::parse(".field-type-text-with-summary").unwrap();
@@ -22,18 +36,34 @@ lazy_static! {
 
     static ref LANG_MAP: HashMap<&'static str, &'static str> = {
         let mut map = HashMap::new();
-        map.insert("English", "en");
-        map.insert("Afrikaans", "af");
-        map.insert("isiNdebele", "nr");
-        map.insert("isiXhosa", "xh");
-        map.insert("isiZulu", "zu");
-        map.insert("Sesotho", "st");
+        map.insert("English", "eng");
+        map.insert("Afrikaans", "afr");
+        map.insert("isiNdebele", "nbl");
+        map.insert("isiXhosa", "xho");
+        map.insert("isiZulu", "zul");
+        map.insert("Sesotho", "sot");
         map.insert("Sesotho sa Leboa", "nso");
-        map.insert("Setswana", "tn");
-        map.insert("siSwati", "ss");
-        map.insert("Siswati", "ss");
-        map.insert("Tshivenda", "ve");
-        map.insert("Xitsonga", "ts");
+        map.insert("Setswana", "tsn");
+        map.insert("Siswati", "ssw"); 
+        map.insert("siSwati", "ssw"); // THIS IS NOT A DUPLICATE
+        map.insert("Tshivenda", "ven");
+        map.insert("Xitsonga", "tso");
+        map
+    };
+
+    static ref ABBR_MAP: HashMap<&'static str, &'static str> = {
+        let mut map = HashMap::new();
+        map.insert("en", "eng");
+        map.insert("af", "afr");
+        map.insert("nr", "nbl");
+        map.insert("xh", "xho");
+        map.insert("zu", "zul");
+        map.insert("st", "sot");
+        map.insert("nso", "nso");
+        map.insert("tn", "tsn");
+        map.insert("ss", "ssw");
+        map.insert("ve", "ven");
+        map.insert("ts", "tso");
         map
     };
 }
@@ -129,9 +159,10 @@ pub fn compile_trans_links(page: &str) -> Result<TransStruct, TransLinksCompilat
         for child in block_children {
             let lang_tag_full = child.value().as_element().unwrap().attr("class").unwrap();
             let lang_tag_trim = lang_tag_full.split(' ').collect::<Vec<&str>>()[0].to_string();
+            let proper_lang_abbr = ABBR_MAP[lang_tag_trim.as_str()].to_string();
             let pre_link = child.first_child().unwrap().value().as_element().unwrap().attr("href").unwrap();
             let post_link = format!("{}{}", BASE_PATH, pre_link);
-            trans_struct.insert(lang_tag_trim, post_link);
+            trans_struct.insert(proper_lang_abbr, post_link);
         }
         println!("Found translation links for {}", title);
         Ok(trans_struct)
@@ -198,7 +229,7 @@ pub fn build_data_filepath(date: String) -> String {
 
 pub fn create_file(file_path: String) {
     match fs::create_dir(file_path.clone()) {
-        Ok(()) => println!("Directory {} created successfully", file_path),
+        Ok(()) => {}
         Err(error) => println!("Error creating {}: {}", file_path, error),
     }
 }
@@ -209,7 +240,7 @@ pub fn write_to_file(text: String, file_path: String, file_name: String) {
 
     match fs::File::create(file_name.clone()) {
         Ok(mut file) => match file.write_all(text.as_bytes()) {
-            Ok(()) => println!("Text written to {} successfully", file_name.clone()),
+            Ok(()) => {},
             Err(error) => println!("Error writing to file: {}", error),
         },
         Err(error) => println!("Error creating file: {}", error),
@@ -235,6 +266,9 @@ pub fn read_latest_date() -> String {
     file_names.sort_by(|a, b| b.cmp(a));
 
     let name = file_names.first().unwrap();
+    if name == ".gitkeep" {
+        return "0000-00-00".into()
+    }
     let date = &name[5..];
     date.into()
 }
