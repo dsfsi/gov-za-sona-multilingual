@@ -1,0 +1,39 @@
+# Sentence Aligment using LASER by facebook_research
+
+## Background
+
+This folder stores the modules and scripts to perform sentence alignment using LASER encoded sentences and basic one-to-alignment.   
+The encoded and basic output data is stored in `data/sentence_align_output` and `data/simple_align_output` respectively.
+
+## File Structure
+
+```
+src/sentence_alignment/
+├── LASER                     # LASER module from Facebook Research
+├── README 
+├── last_edition_read.txt     # txt to keep track of last edition read for Github Actions
+├── docker                    # a Docker file to make working with LASER easier, hopefully
+│   ├── Dockerfile 
+│   ├── README
+│   └── req.txt               # requirements needed, probably missing some req's
+├── main.py                   # script executing the logic of the sentence alignment scripts listed below
+├── file_handler.py           # script to deal with various reading and writing of .txt's & .csv's
+├── laser_config.py           # script to config Laser module, download available encoders & tokeniser
+├── sentence_alignment.py     # script to perform alignment for both encoded and plaintext sentences 
+├── sentence_embedding.py     # script to perform encoding and decoding of extracted data in data/processed
+└── sentence_tokenisation.py  # script to perform cleaning & tokenisation of extracted data in data/processed
+```
+
+## Overview of logic used
+
+In `main.py`, the general steps to perform the SA task are as follows:
+1.  Config LASER using the config script
+2.  Build a big filepath dictonary to ref all the data easily  
+    2.1   Throughout embedding and tokenisation the file structure of the raw data is kept intact to maintain links between the data
+3. Embed the data in data/processed and write to data/embed
+4. Tokenise the data in data/processed and write to data/tokenised
+5. Perform sentence alignment using the embeddings and write to csv in data/sentence_align_output
+6. Perform basic sentence alignment using one to one alignment of tokenised sentences and write to csv in data/simple_align_output
+
+The code has extensive documentation & comments, so this README is relatively short.
+
