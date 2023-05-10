@@ -9,20 +9,6 @@ use lazy_static::lazy_static;
 
 use crate::trans_struct::TransStruct;
 
-// lang_mappings = {
-//     'afr' : '',
-//     'eng' : '',
-//     'nbl' : '',
-//     'nso' : 'sot_Latn',
-//     'sep' : 'nso_Latn',
-//     'ssw' : 'ssw_Latn',
-//     'tsn' : 'tsn_Latn',
-//     'tso' : 'tso_Latn',
-//     'ven' : '',
-//     'xho' : 'xho_Latn',
-//     'zul' : 'zul_Latn',
-// } 
-
 lazy_static! {
     static ref MAIN_DIV: Selector = Selector::parse(".field-items").unwrap();
     static ref TEXT_DIV: Selector = Selector::parse(".field-type-text-with-summary").unwrap();
