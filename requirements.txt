@@ -1,4 +1,9 @@
-# local package
--e .
-
-# external requirements
+faiss-cpu
+fairseq
+tensorboardX
+transliterate
+tabulate
+scikit-learn
+nltk
+numpy
+pandas
