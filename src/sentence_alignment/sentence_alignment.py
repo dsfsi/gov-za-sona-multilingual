@@ -4,6 +4,10 @@ from pathlib import Path
 
 filepaths_dictionary = file_handler.build_filepaths_dictonary() 
 
+root_path = Path(os.path.abspath(__file__)).parent.parent.parent # gov-za-sona-multilingual/
+
+token_data_path = Path(root_path / 'data' / 'tokenised') 
+embed_data_path = Path(root_path / 'data' / 'embed')
 
 def cosine_score(src, tgt):        
     """
@@ -14,7 +18,7 @@ def cosine_score(src, tgt):
     """
     return cosine_similarity(src.reshape(1,-1), tgt.reshape(1,-1))[0][0]
 
-def two_lang_alignment(src_lang, tgt_lang, edition):
+def two_lang_alignment(src_lang, tgt_lang, directory):
     """
     ### Performs sentence alignment on two languages using LASER encoded sentence vector
     #### Params 
@@ -22,40 +26,17 @@ def two_lang_alignment(src_lang, tgt_lang, edition):
         -   `tgt_lang`: The name of the other language (str)
         -   `edition`: The path_name of where to find the tokenised sentence .txt's (str)
     """
-    if edition not in filepaths_dictionary[src_lang].keys(): # if the edition doesn't exist for the source lang
-        return                                               # fail
-    elif edition not in filepaths_dictionary[tgt_lang].keys(): # if the edition doesn't exist for the target lang
-        return                                                 # fail
-    
-    src_txt_paths = filepaths_dictionary[src_lang][edition] # fetch the list of editions in the source lang
-    tgt_txt_paths = filepaths_dictionary[tgt_lang][edition] # fetch the list of editions in the target lang
-    src_txt_paths.sort()
-    tgt_txt_paths.sort()
+    src_text_path = Path(token_data_path / directory / '{}.txt'.format(src_lang))
+    tgt_text_path = Path(token_data_path / directory / '{}.txt'.format(tgt_lang))
+    src_embed_path = Path(embed_data_path / directory / '{}.txt'.format(src_lang))
+    tgt_embed_path = Path(embed_data_path / directory / '{}.txt'.format(tgt_lang))
 
-    # some explaination for the mess of code underneath
-    # an example of the variables src_txt_paths & tgt_txt_paths are:
-    # src_txts: ['2020-05-ed2-vukuzenzele-eng-01.txt', '2020-05-ed2-vukuzenzele-eng-02.txt]
-    # tgt_txts: ['2020-05-ed2-vukuzenzele-afr-02.txt', '2020-05-ed2-vukuzenzele-afr-01.txt]
-    # the problem is they are not aligned - you will get an error trying to align 'eng-01' and 'afr-02'
-    # so the messy code rectifies that
-    #
-    # I just discovered the python .sort method but I am much too tired to refactor this right now
 
-    
-    
-
-    for i in range(len(src_txt_paths)-1):
-        src_vector = sentence_embedding.decode_sentences(edition, src_txt_paths[i]) # decode the src vector from the data/embed folder
-        src_sentences = file_handler.read_file_as_array(edition, src_txt_paths[i]) # read the token sentences as array from data/tokenised folder
-        tgt_sentences = file_handler.read_file_as_array(edition, tgt_txt_paths[i]) # read the token sentences as array from data/tokenised folder
-        tgt_vector = sentence_embedding.decode_sentences(edition, tgt_txt_paths[i]) # decode the tgt vector from the data/embed folder
-        align(src_lang, tgt_lang, src_vector, src_sentences, tgt_vector, tgt_sentences)
-        # if len(src_vector) == len(tgt_vector) == len(src_sentences) == len(tgt_sentences): # if all the lists and vectors are the same length
-            # sim_scores = perform_cosine_similarity(src_vector, tgt_vector) # obtain the list of similarity scores
-            # file_handler.append_to_final_csv( #append all to csv
-        #                                     src_sentences,          
-        #                                     tgt_sentences, 
-        #                                     sim_scores)
+    src_vector = sentence_embedding.decode_sentences(directory, src_lang) # decode the src vector from the data/embed folder
+    src_sentences = file_handler.read_file_as_array(directory, src_lang) # read the token sentences as array from data/tokenised folder
+    tgt_sentences = file_handler.read_file_as_array(directory, tgt_lang) # read the token sentences as array from data/tokenised folder
+    tgt_vector = sentence_embedding.decode_sentences(directory, tgt_lang) # decode the tgt vector from the data/embed folder
+    align(src_lang, tgt_lang, src_vector, src_sentences, tgt_vector, tgt_sentences)
         
 def align(src_lang, tgt_lang, src_vector, src_sentences, tgt_vector, tgt_sentences): 
     used_sentences = []

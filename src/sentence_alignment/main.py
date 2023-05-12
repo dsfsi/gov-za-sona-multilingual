@@ -42,21 +42,22 @@ if __name__ == "__main__":
 
 
     # perform LASER encoding
-    print("LASER encoding process started...")
-    for directory in filepaths_dictionary:
-        for lang in languages:  
-            print("Encoding {} speech for {}".format(lang, directory))
-            sentence_embedding.encode_sentences(directory, lang, lang_mappings[lang])
-    print("LASER encoding process completed")
+    # print("LASER encoding process started...")
+    # for directory in filepaths_dictionary:
+    #     for lang in languages:  
+    #         print("Encoding {} speech for {}".format(lang, directory))
+    #         sentence_embedding.encode_sentences(directory, lang, lang_mappings[lang])
+    # print("LASER encoding process completed")
 
 
 
-    #     # perform SA on LASER encoded sentences
-    #     print("LASER aligning process started, output will be written to .csv in the data/sentence_align_output folder.")
-    #     for (first_lang, sec_lang) in language_pairs:
-    #         for edition in edition_keys:
-    #             sentence_alignment.two_lang_alignment(first_lang, sec_lang, edition)
-    #     print("LASER aligning completed")
+        # perform SA on LASER encoded sentences
+    print("LASER aligning process started, output will be written to .csv in the data/sentence_align_output folder.")
+    for (first_lang, sec_lang) in language_pairs:
+        for directory in filepaths_dictionary:
+            print(directory)
+            # sentence_alignment.two_lang_alignment(first_lang, sec_lang, edition)
+    print("LASER aligning completed")
 
 
 

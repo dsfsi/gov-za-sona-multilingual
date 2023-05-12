@@ -7,6 +7,7 @@ root_path = Path(os.path.abspath(__file__)).parent.parent.parent # gov-za-sona-m
 
 raw_data_path = Path(root_path / 'data' / 'raw') 
 token_data_path = Path(root_path / 'data' / 'tokenised') 
+token_data_path = Path(root_path / 'data' / 'tokenised') 
 
 def build_filepath_dict():
     dirs = os.listdir(raw_data_path)
