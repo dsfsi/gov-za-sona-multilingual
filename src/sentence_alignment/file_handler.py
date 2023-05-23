@@ -1,4 +1,4 @@
-import os
+import os, pandas
 from pathlib import Path
 
 languages = ['afr', 'eng', 'nbl', 'nso', 'sot', 'ssw', 'tsn', 'tso', 'ven', 'xho', 'zul']
@@ -7,7 +7,7 @@ root_path = Path(os.path.abspath(__file__)).parent.parent.parent # gov-za-sona-m
 
 raw_data_path = Path(root_path / 'data' / 'raw') 
 token_data_path = Path(root_path / 'data' / 'tokenised') 
-token_data_path = Path(root_path / 'data' / 'tokenised') 
+output_data_path = Path(root_path / 'data' / 'sentence_align_output')
 
 def build_filepath_dict():
     dirs = os.listdir(raw_data_path)
@@ -38,7 +38,7 @@ def read_file_as_array(edition_path, txt_path): # -> str
 
     Generally used to read tokenised data for further processing
     """
-    file_path = Path(token_data_path / edition_path / txt_path)
+    file_path = Path(token_data_path / edition_path / '{}.txt'.format(txt_path))
     return open(file_path, 'r').readlines() 
 
 def append_to_final_csv(src_lang, src_sentences, tgt_lang, tgt_sentences , sim_scores):

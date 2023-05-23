@@ -2,8 +2,6 @@ import file_handler, sentence_embedding, re, os
 from sklearn.metrics.pairwise import cosine_similarity, cosine_distances
 from pathlib import Path
 
-filepaths_dictionary = file_handler.build_filepaths_dictonary() 
-
 root_path = Path(os.path.abspath(__file__)).parent.parent.parent # gov-za-sona-multilingual/
 
 token_data_path = Path(root_path / 'data' / 'tokenised') 

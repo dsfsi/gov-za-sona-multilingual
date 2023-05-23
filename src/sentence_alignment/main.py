@@ -1,5 +1,5 @@
 # import laser_config, file_handler, sentence_tokenisation, sentence_embedding, sentence_alignment
-import file_handler, laser_config, sentence_tokenisation, sentence_embedding
+import file_handler, laser_config, sentence_tokenisation, sentence_embedding, sentence_alignment
 from itertools import combinations
 
 languages = ['afr', 'eng', 'nbl', 'sot', 'nso', 'ssw', 'tsn', 'tso', 'ven', 'xho', 'zul']
@@ -55,8 +55,7 @@ if __name__ == "__main__":
     print("LASER aligning process started, output will be written to .csv in the data/sentence_align_output folder.")
     for (first_lang, sec_lang) in language_pairs:
         for directory in filepaths_dictionary:
-            print(directory)
-            # sentence_alignment.two_lang_alignment(first_lang, sec_lang, edition)
+            sentence_alignment.two_lang_alignment(first_lang, sec_lang, directory)
     print("LASER aligning completed")
 
 
