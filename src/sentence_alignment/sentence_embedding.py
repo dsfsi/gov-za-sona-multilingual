@@ -9,7 +9,7 @@ embed_data_path = Path(root_path / "data" / "embed")
 
 def encode_sentences(edition, lang, model):
     """
-    ### Calls LASER task to encode a txt_file and outputs a raw_file that can be decoded into a sentece vector
+    ### Calls LASER task to encode a txt_file and outputs a raw_file that can be decoded into a sentece vectors
     #### Example
     `hello` -> raw format
     #### Params:
@@ -47,7 +47,7 @@ def decode_sentences(edition, lang):
     ### Decodes the raw output into a sentence vector - the vector stores in the sentence meaning in computer terms
     #### Example
     raw format -> `[3, 4, ... ,5, 6]`
-     #### Params:
+    #### Params:
         -   edition_path: the path_name to the dir for this edition (str)
         -   txt_path: the path_name for the raw output to be decoded (str)
     """

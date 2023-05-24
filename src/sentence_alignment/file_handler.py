@@ -25,6 +25,11 @@ output_data_path = Path(root_path / "data" / "sentence_align_output")
 
 
 def build_filepath_dict():
+    """
+    ### Returns a dictonary of the raw data paths
+
+    Used to locate and iterate over the data for processing
+    """
     dirs = os.listdir(raw_data_path)
     dirs.remove(".gitkeep")
     dirs.sort()
@@ -33,11 +38,21 @@ def build_filepath_dict():
 
 
 def read_file_as_string(directory, lang):
+    """
+    ### Reads txt file as a string
+
+    Used to read in a text file before passing it to the sentence tokeniser
+    """
     path = Path(raw_data_path / directory / "{}.txt".format(lang))
     return open(path, "r").read()
 
 
 def write_tokens_to_txt(tokens, directory, lang):
+    """
+    ### Writes sentence token array to a txt file
+
+    Used after tokenisation, sentences are embedded line by line for laser.
+    """
     path = Path(token_data_path / directory)
     if not os.path.exists(path):
         os.makedirs(path)
@@ -65,10 +80,8 @@ def append_to_final_csv(src_lang, src_sentences, tgt_lang, tgt_sentences, sim_sc
     #### Params
         -   src_lang: source lang (str)
         -   src_sentences: source sentence tokens (list)
-        -   src_vector: source sentence vectors (list)
         -   tgt_lang: target lang (str)
         -   tgt_sentences: target sentence tokens (list)
-        -   tgt_vector: target sentence vectors (list)
         -   sim_scores: confidence scores between the pairing (list)
     """
     data = {
