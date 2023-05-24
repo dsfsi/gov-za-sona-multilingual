@@ -11,11 +11,6 @@ The encoded and basic output data is stored in `data/sentence_align_output` and 
 src/sentence_alignment/
 ├── LASER                     # LASER module from Facebook Research
 ├── README 
-├── last_edition_read.txt     # txt to keep track of last edition read for Github Actions
-├── docker                    # a Docker file to make working with LASER easier, hopefully
-│   ├── Dockerfile 
-│   ├── README
-│   └── req.txt               # requirements needed, probably missing some req's
 ├── main.py                   # script executing the logic of the sentence alignment scripts listed below
 ├── file_handler.py           # script to deal with various reading and writing of .txt's & .csv's
 ├── laser_config.py           # script to config Laser module, download available encoders & tokeniser
@@ -34,6 +29,3 @@ In `main.py`, the general steps to perform the SA task are as follows:
 4. Tokenise the data in data/processed and write to data/tokenised
 5. Perform sentence alignment using the embeddings and write to csv in data/sentence_align_output
 6. Perform basic sentence alignment using one to one alignment of tokenised sentences and write to csv in data/simple_align_output
-
-The code has extensive documentation & comments, so this README is relatively short.
-
