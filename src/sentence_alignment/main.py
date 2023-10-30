@@ -52,12 +52,12 @@ if __name__ == "__main__":
 
     # NB needs Python 3.8 due to FAISS-CPU module
     # perform LASER encoding
-    # print("LASER encoding process started...")
-    # for directory in filepaths_dictionary:
-    #     for lang in languages:
-    #         print("Encoding {} speech for {}".format(lang, directory))
-    #         sentence_embedding.encode_sentences(directory, lang, lang_mappings[lang])
-    # print("LASER encoding process completed")
+    print("LASER encoding process started...")
+    for directory in filepaths_dictionary:
+        for lang in languages:
+            print("Encoding {} speech for {}".format(lang, directory))
+            sentence_embedding.encode_sentences(directory, lang, lang_mappings[lang])
+    print("LASER encoding process completed")
 
     # perform SA on LASER encoded sentences
     print(
@@ -65,5 +65,5 @@ if __name__ == "__main__":
     )
     for first_lang, sec_lang in language_pairs:
         for directory in filepaths_dictionary:
-            sentence_alignment.two_lang_alignment(first_lang, sec_lang, directory)
+            sentence_alignment.sentence_alignment(first_lang, sec_lang, directory)
     print("LASER aligning completed")
