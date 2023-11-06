@@ -27,7 +27,7 @@ def encode_sentences(edition, lang, model):
         os.makedirs(Path(embed_data_path / edition))  # make it
 
     output_path = Path(
-        embed_data_path / edition / "{}.emb".format(lang)
+        embed_data_path / edition / "{}.txt".format(lang)
     )  # the path to output
     input_path = Path(
         token_data_path / edition / "{}.txt".format(lang)
@@ -52,7 +52,7 @@ def decode_sentences(edition, lang):
         -   txt_path: the path_name for the raw output to be decoded (str)
     """
     dim = 1024  # dimensions
-    path = Path(embed_data_path / edition / "{}.emb".format(lang))  # path to file
+    path = Path(embed_data_path / edition / "{}.txt".format(lang))  # path to file
     vector_list = numpy.fromfile(
         path, dtype=numpy.float32, count=-1
     )  # fancy numpy coding idk

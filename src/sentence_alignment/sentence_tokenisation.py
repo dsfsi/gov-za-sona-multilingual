@@ -35,6 +35,7 @@ def pre_process_text(text):  # -> str
     text = re.sub("\[", "", text)
     text = re.sub("\]", ".", text)
     text = fix_end_of_sentence(text)
+    
     return text
 
 

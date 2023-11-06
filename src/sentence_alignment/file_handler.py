@@ -1,4 +1,4 @@
-import os, pandas
+import os, pandas, json
 from pathlib import Path
 
 languages = [
@@ -20,8 +20,9 @@ root_path = Path(
 ).parent.parent.parent  # gov-za-sona-multilingual/
 
 raw_data_path = Path(root_path / "data" / "raw")
+proc_data_path = Path(root_path / "data" / "raw_proc")
 token_data_path = Path(root_path / "data" / "tokenised")
-output_data_path = Path(root_path / "data" / "sentence_align_output")
+out_path = Path(root_path / "data" / "sentence_align_output")
 
 
 def build_filepath_dict():
@@ -63,6 +64,16 @@ def write_tokens_to_txt(tokens, directory, lang):
     for token in tokens:
         new.write("{}\n".format(token))
 
+def write_txt(text, directory, lang):
+    path = Path(proc_data_path / directory)
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    path = Path(path / "{}.txt".format(lang))
+
+    new = open(path, "w")
+    new.write(text)
+
 
 def read_file_as_array(directory_path, txt_path):  # -> str
     """
@@ -72,6 +83,24 @@ def read_file_as_array(directory_path, txt_path):  # -> str
     """
     file_path = Path(token_data_path / directory_path / "{}.txt".format(txt_path))
     return open(file_path, "r").readlines()
+
+def write_to_jsonl(src,tgt,directory,data):
+    file_name = "aligned-{}-{}.jsonl".format(src, tgt)
+    file_path = out_path  / file_name
+
+    if not os.path.exists(out_path):
+        os.makedirs(out_path)
+
+    if file_name in os.listdir(out_path):
+        f = open(file_path, 'a')
+        for d in data:
+            f.write(json.dumps(d) + '\n')
+    else:
+        f = open(file_path, 'w')
+        for d in data:
+            f.write(json.dumps(d) + '\n')
+
+    print("Aligned {}-{} from  {}".format(src,tgt, directory))
 
 
 def append_to_final_csv(src_lang, src_sentences, tgt_lang, tgt_sentences, sim_scores):
@@ -95,14 +124,14 @@ def append_to_final_csv(src_lang, src_sentences, tgt_lang, tgt_sentences, sim_sc
     csv_path = Path(
         "aligned_{}_{}.csv".format(src_lang, tgt_lang)
     )  # Path of lang aligned csv
-    if not os.path.exists(output_data_path):  # if data/sentence_alignment doesnt exist
-        os.makedirs(output_data_path)  # create it
+    if not os.path.exists(out_path):  # if data/sentence_alignment doesnt exist
+        os.makedirs(out_path)  # create it
 
-    if os.path.exists(Path(output_data_path / csv_path)):  # if .csv does exist
+    if os.path.exists(Path(out_path / csv_path)):  # if .csv does exist
         df.to_csv(
-            Path(output_data_path / csv_path), mode="a", header=False, index=False
+            Path(out_path / csv_path), mode="a", header=False, index=False
         )  # append with no headers
     else:
         df.to_csv(
-            Path(output_data_path / csv_path), mode="w", header=True, index=False
+            Path(out_path / csv_path), mode="w", header=True, index=False
         )  # create with headers

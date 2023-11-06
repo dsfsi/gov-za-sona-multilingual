@@ -42,22 +42,23 @@ if __name__ == "__main__":
     laser_config.download_tokeniser()
 
     # perform sentence tokenisation
-    print("Tokenising started...")
-    for directory in filepaths_dictionary:
-        for lang in languages:
-            text = file_handler.read_file_as_string(directory, lang)
-            tokens = sentence_tokenisation.tokenise(text)
-            file_handler.write_tokens_to_txt(tokens, directory, lang)
-    print("Tokenising complete.")
+    # print("Tokenising started...")
+    # for directory in filepaths_dictionary:
+    #     for lang in languages:
+    #         text = file_handler.read_file_as_string(directory, lang)
+    #         tokens = sentence_tokenisation.tokenise(text)
+    #         file_handler.write_txt(sentence_tokenisation.pre_process_text(text), directory, lang)
+    #         file_handler.write_tokens_to_txt(tokens, directory, lang)
+    # print("Tokenising complete.")
 
-    # NB needs Python 3.8 due to FAISS-CPU module
-    # perform LASER encoding
-    print("LASER encoding process started...")
-    for directory in filepaths_dictionary:
-        for lang in languages:
-            print("Encoding {} speech for {}".format(lang, directory))
-            sentence_embedding.encode_sentences(directory, lang, lang_mappings[lang])
-    print("LASER encoding process completed")
+    # # NB needs Python 3.8 due to FAISS-CPU module
+    # # perform LASER encoding
+    # print("LASER encoding process started...")
+    # for directory in filepaths_dictionary:
+    #     for lang in languages:
+    #         print("Encoding {} speech for {}".format(lang, directory))
+    #         sentence_embedding.encode_sentences(directory, lang, lang_mappings[lang])
+    # print("LASER encoding process completed")
 
     # perform SA on LASER encoded sentences
     print(

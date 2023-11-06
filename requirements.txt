@@ -1,5 +1,5 @@
 faiss-cpu
-fairseq
+fairseq==0.12.1
 tensorboardX
 transliterate
 tabulate
